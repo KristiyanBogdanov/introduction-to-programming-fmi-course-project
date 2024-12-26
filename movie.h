@@ -17,8 +17,17 @@
 
 #include <cstddef> // Required for size_t
 
+// Movie structure constants
 const size_t MAX_TEXT_LENGTH = 100;
 const double DEFAULT_RATING = 5.0;
+
+// MovieStorage structure constants
+const size_t INITIAL_CAPACITY = 10;
+const size_t RESIZE_BUFFER = 2;
+
+// File operations constants
+const char COL_SEPARATOR = ';';
+const char SUB_SEPARATOR = ',';
 
 struct Movie {
     char title[MAX_TEXT_LENGTH];
@@ -30,10 +39,21 @@ struct Movie {
     double rating;
 };
 
-bool isPositive(const int number);
-size_t readPositiveNumber(const char* message);
-void readString(char* buffer, const char* message);
+struct MovieStorage {
+    Movie* data;
+    size_t size;
+    size_t capacity;
+};
+
 Movie askForMovieDetails();
 void freeMovie(Movie& movie);
+
+MovieStorage createMovieStorage();
+void resizeMovieStorage(MovieStorage& array);
+void addMovie(MovieStorage& array, const Movie& element);
+void freeMovieStorage(MovieStorage& array);
+
+int saveMoviesToTextFile(const MovieStorage& array, const char* filename);
+int loadMoviesFromTextFile(MovieStorage& array, const char* filename);
 
 #endif

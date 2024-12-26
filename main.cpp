@@ -14,17 +14,25 @@
 
 #include "user.h"
 #include "movie.h"
-#include "dynamic_array.h"
 #include <iostream>
 
 using namespace std;
 
+const char* DB_FILENAME = "movies.txt";
+
 void printProgramHeader();
 
 int main() {
-    DynamicArray movies = createDynamicArray();
-
     printProgramHeader();
+
+    MovieStorage movies = createMovieStorage();
+    int result = loadMoviesFromTextFile(movies, DB_FILENAME);
+
+    if (-1 == result) {
+        cout << "Error loading movies from file." << endl;
+        freeMovieStorage(movies);
+        return -1;
+    }
 
     UserType userType = chooseUserType();
     Action action = selectAction(userType);
@@ -32,14 +40,22 @@ int main() {
     switch (action) {
         case ADD_MOVIE: {
             Movie newMovie = askForMovieDetails();
-            addElement(movies, newMovie);
+            addMovie(movies, newMovie);
             break;
         }
         default:
             return 0;
     }
 
-    freeDynamicArray(movies);
+    result = saveMoviesToTextFile(movies, DB_FILENAME);
+
+    if (-1 == result) {
+        cout << "Error saving movies to file." << endl;
+        freeMovieStorage(movies);
+        return -1;
+    }
+
+    freeMovieStorage(movies);
 
     return 0;
 }

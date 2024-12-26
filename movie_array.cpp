@@ -8,14 +8,14 @@
  * @idnumber 4MI0600438
  * @compiler GCC
  * 
- * <file with the implementation of the dynamic array structure and related functions>
+ * <file with the implementation of the functions in movie.h related to the dynamic array operations>
  * 
 */
 
-#include "dynamic_array.h"
+#include "movie.h"
 
-DynamicArray createDynamicArray() {
-    DynamicArray array;
+MovieStorage createMovieStorage() {
+    MovieStorage array;
 
     array.data = new Movie[INITIAL_CAPACITY];
     array.size = 0;
@@ -24,7 +24,7 @@ DynamicArray createDynamicArray() {
     return array;
 }
 
-void resizeDynamicArray(DynamicArray& array) {
+void resizeMovieStorage(MovieStorage& array) {
     Movie* newData = new Movie[array.capacity + RESIZE_BUFFER];
 
     for (size_t i = 0; i < array.size; ++i) {
@@ -37,15 +37,15 @@ void resizeDynamicArray(DynamicArray& array) {
     array.capacity += RESIZE_BUFFER;
 }
 
-void addElement(DynamicArray& array, const Movie& element) {
+void addMovie(MovieStorage& array, const Movie& element) {
     if (array.size == array.capacity) {
-        resizeDynamicArray(array);
+        resizeMovieStorage(array);
     }
 
     array.data[array.size++] = element;
 }
 
-void freeDynamicArray(DynamicArray& array) {
+void freeMovieStorage(MovieStorage& array) {
     for (size_t i = 0; i < array.size; ++i) {
         freeMovie(array.data[i]);
     }

@@ -6,7 +6,7 @@ CXXFLAGS = -Wall -Wextra -std=c++11
 TARGET = CourseProject
 
 # Source files
-SRCS = main.cpp movie.cpp user.cpp dynamic_array.cpp
+SRCS = main.cpp user.cpp movie_core.cpp movie_array.cpp movie_file.cpp utils.cpp
 
 # Default rule: build the executable
 all: $(TARGET)
