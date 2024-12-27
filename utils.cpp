@@ -42,6 +42,19 @@ void readString(char* buffer, const size_t maxLength, const char* message) {
     cin.getline(buffer, maxLength);
 }
 
+bool areStringsEqual(const char* first, const char* second) {
+    while (*first && *second) {
+        if (*first != *second) {
+            return false;
+        }
+        
+        ++first;
+        ++second;
+    }
+
+    return *first == *second;
+}
+
 bool doesFileExist(const char* filename) {
     ifstream file(filename);
     return file.good();

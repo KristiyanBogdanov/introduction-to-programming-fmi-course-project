@@ -21,6 +21,7 @@
 bool isPositive(const int number);
 size_t readPositiveNumber(const char* message);
 void readString(char* buffer, const size_t maxLength, const char* message);
+bool areStringsEqual(const char* first, const char* second);
 
 bool doesFileExist(const char* filename);
 

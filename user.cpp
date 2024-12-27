@@ -19,15 +19,18 @@ using namespace std;
 
 const char* ACTION_DESCRIPTIONS[] = {
     "Add a movie",
+    "Search by genre",
     "Exit program",
 };
 
 const Action ADMIN_ACTIONS[] = {
     ADD_MOVIE,
+    SEARCH_BY_GENRE,
     EXIT_PROGRAM,
 };
 
 const Action USER_ACTIONS[] = {
+    SEARCH_BY_GENRE,
     EXIT_PROGRAM,
 };
 

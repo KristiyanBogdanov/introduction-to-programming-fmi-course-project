@@ -24,6 +24,7 @@ enum UserType {
 
 enum Action {
     ADD_MOVIE,
+    SEARCH_BY_GENRE,
     EXIT_PROGRAM,
 };
 

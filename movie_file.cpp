@@ -15,6 +15,7 @@
 #include "movie.h"
 #include "utils.h"
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 
@@ -54,6 +55,11 @@ int loadMoviesFromTextFile(MovieStorage& array, const char* filename) {
         return 0;
     }
 
+    if (file.peek() == ifstream::traits_type::eof()) {
+        file.close();
+        return 0;
+    }
+
     if (!file.is_open()) {
         return -1;
     }
@@ -85,6 +91,8 @@ int loadMoviesFromTextFile(MovieStorage& array, const char* filename) {
         }
 
         addMovie(array, movie);
+
+        file.ignore();
     }
 
     file.close();

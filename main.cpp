@@ -14,6 +14,7 @@
 
 #include "user.h"
 #include "movie.h"
+#include "utils.h"
 #include <iostream>
 
 using namespace std;
@@ -43,8 +44,16 @@ int main() {
             addMovie(movies, newMovie);
             break;
         }
+        case SEARCH_BY_GENRE: {
+            char genre[MAX_TEXT_LENGTH];
+            readString(genre, MAX_TEXT_LENGTH, "Enter genre: ");
+
+            MovieStorage result = searchByGenre(movies, genre);
+            printMovies(result);
+            break;
+        }
         default:
-            return 0;
+            break;
     }
 
     result = saveMoviesToTextFile(movies, DB_FILENAME);

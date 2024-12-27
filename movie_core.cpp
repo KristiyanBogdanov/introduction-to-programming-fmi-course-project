@@ -40,6 +40,45 @@ Movie askForMovieDetails() {
     return movie;
 }
 
+MovieStorage searchByGenre(const MovieStorage& array, const char* genre) {
+    MovieStorage result = createMovieStorage();
+
+    for (size_t i = 0; i < array.size; ++i) {
+        if (areStringsEqual(array.data[i].genre, genre)) {
+            addMovie(result, array.data[i]);
+        }
+    }
+
+    return result;
+}
+
+void printMovies(const MovieStorage& array) {
+    cout << "Title" << COL_SEPARATOR 
+         << "Year" << COL_SEPARATOR 
+         << "Genre" << COL_SEPARATOR 
+         << "Director" << COL_SEPARATOR 
+         << "Rating" << COL_SEPARATOR 
+         << "Actors" << endl;
+
+    for (size_t i = 0; i < array.size; ++i) {
+        cout << array.data[i].title << COL_SEPARATOR 
+             << array.data[i].year << COL_SEPARATOR 
+             << array.data[i].genre << COL_SEPARATOR 
+             << array.data[i].director << COL_SEPARATOR 
+             << array.data[i].rating << COL_SEPARATOR;
+
+        for (size_t j = 0; j < array.data[i].actorsCount; ++j) {
+            cout << array.data[i].actors[j];
+
+            if (j < array.data[i].actorsCount - 1) {
+                cout << SUB_SEPARATOR;
+            }
+        }
+
+        cout << endl;
+    }
+}
+
 void freeMovie(Movie& movie) {
     delete[] movie.actors;
 }
