@@ -47,6 +47,7 @@ struct MovieStorage {
 
 Movie askForMovieDetails();
 MovieStorage searchByGenre(const MovieStorage& array, const char* genre);
+MovieStorage searchByTitle(const MovieStorage& array, const char* title);
 void printMovies(const MovieStorage& array);
 void freeMovie(Movie& movie);
 

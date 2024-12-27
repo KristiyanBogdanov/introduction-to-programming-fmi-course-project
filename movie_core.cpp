@@ -44,7 +44,19 @@ MovieStorage searchByGenre(const MovieStorage& array, const char* genre) {
     MovieStorage result = createMovieStorage();
 
     for (size_t i = 0; i < array.size; ++i) {
-        if (areStringsEqual(array.data[i].genre, genre)) {
+        if (areStringsEqualIgnoreCase(array.data[i].genre, genre)) {
+            addMovie(result, array.data[i]);
+        }
+    }
+
+    return result;
+}
+
+MovieStorage searchByTitle(const MovieStorage& array, const char* title) {
+    MovieStorage result = createMovieStorage();
+
+    for (size_t i = 0; i < array.size; ++i) {
+        if (doesStringContainIgnoreCase(array.data[i].title, title)) {
             addMovie(result, array.data[i]);
         }
     }

@@ -52,6 +52,14 @@ int main() {
             printMovies(result);
             break;
         }
+        case SEARCH_BY_TITLE: {
+            char title[MAX_TEXT_LENGTH];
+            readString(title, MAX_TEXT_LENGTH, "Enter title: ");
+
+            MovieStorage result = searchByTitle(movies, title);
+            printMovies(result);
+            break;
+        }
         default:
             break;
     }
