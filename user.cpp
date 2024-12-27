@@ -21,6 +21,7 @@ const char* ACTION_DESCRIPTIONS[] = {
     "Add a movie",
     "Search by genre",
     "Search by title",
+    "Print all movies",
     "Exit program",
 };
 
@@ -28,12 +29,14 @@ const Action ADMIN_ACTIONS[] = {
     ADD_MOVIE,
     SEARCH_BY_GENRE,
     SEARCH_BY_TITLE,
+    PRINT_ALL,
     EXIT_PROGRAM,
 };
 
 const Action USER_ACTIONS[] = {
     SEARCH_BY_GENRE,
     SEARCH_BY_TITLE,
+    PRINT_ALL,
     EXIT_PROGRAM,
 };
 

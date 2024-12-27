@@ -26,6 +26,7 @@ enum Action {
     ADD_MOVIE,
     SEARCH_BY_GENRE,
     SEARCH_BY_TITLE,
+    PRINT_ALL,
     EXIT_PROGRAM,
 };
 

@@ -60,6 +60,10 @@ int main() {
             printMovies(result);
             break;
         }
+        case PRINT_ALL: {
+            printMovies(movies);
+            break;
+        }
         default:
             break;
     }
