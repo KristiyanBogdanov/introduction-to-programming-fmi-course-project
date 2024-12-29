@@ -40,21 +40,23 @@ struct Movie {
 };
 
 struct MovieStorage {
-    Movie* data;
+    Movie** data;
     size_t size;
     size_t capacity;
 };
 
-Movie askForMovieDetails();
-MovieStorage searchByGenre(const MovieStorage& array, const char* genre);
-MovieStorage searchByTitle(const MovieStorage& array, const char* title);
+Movie* askForMovieDetails();
+MovieStorage findMoviesByGenre(const MovieStorage& array, const char* genre);
+MovieStorage findMoviesByTitle(const MovieStorage& array, const char* title);
 void printMovies(const MovieStorage& array);
-void freeMovie(Movie& movie);
+void askForNewMovieDetails(Movie* movie);
+void freeMovie(Movie* movie);
 
 MovieStorage createMovieStorage();
 void resizeMovieStorage(MovieStorage& array);
-void addMovie(MovieStorage& array, const Movie& element);
+void addMovieToStorage(MovieStorage& array, Movie* element);
 void freeMovieStorage(MovieStorage& array);
+void freeAll(MovieStorage& array);
 
 int saveMoviesToTextFile(const MovieStorage& array, const char* filename);
 int loadMoviesFromTextFile(MovieStorage& array, const char* filename);

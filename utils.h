@@ -19,12 +19,13 @@
 #include <cstddef> // Required for size_t
 
 bool isPositive(const int number);
-size_t readPositiveNumber(const char* message);
+size_t readPositiveNumber(const char* message, const size_t max = SIZE_MAX);
 void readString(char* buffer, const size_t maxLength, const char* message);
 char toLowerCase(const char c);
 bool areCharsEqualIgnoreCase(const char first, const char second);
 bool areStringsEqualIgnoreCase(const char* first, const char* second);
 bool doesStringContainIgnoreCase(const char* string, const char* substring);
+bool askYesNo(const char* question);
 
 bool doesFileExist(const char* filename);
 

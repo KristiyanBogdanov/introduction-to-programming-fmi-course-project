@@ -17,7 +17,7 @@
 MovieStorage createMovieStorage() {
     MovieStorage array;
 
-    array.data = new Movie[INITIAL_CAPACITY];
+    array.data = new Movie*[INITIAL_CAPACITY];
     array.size = 0;
     array.capacity = INITIAL_CAPACITY;
 
@@ -25,7 +25,7 @@ MovieStorage createMovieStorage() {
 }
 
 void resizeMovieStorage(MovieStorage& array) {
-    Movie* newData = new Movie[array.capacity + RESIZE_BUFFER];
+    Movie** newData = new Movie*[array.capacity + RESIZE_BUFFER];
 
     for (size_t i = 0; i < array.size; ++i) {
         newData[i] = array.data[i];
@@ -37,7 +37,7 @@ void resizeMovieStorage(MovieStorage& array) {
     array.capacity += RESIZE_BUFFER;
 }
 
-void addMovie(MovieStorage& array, const Movie& element) {
+void addMovieToStorage(MovieStorage& array, Movie* element) {
     if (array.size == array.capacity) {
         resizeMovieStorage(array);
     }
@@ -46,9 +46,13 @@ void addMovie(MovieStorage& array, const Movie& element) {
 }
 
 void freeMovieStorage(MovieStorage& array) {
+    delete[] array.data;
+}
+
+void freeAll(MovieStorage& array) {
     for (size_t i = 0; i < array.size; ++i) {
         freeMovie(array.data[i]);
     }
 
-    delete[] array.data;
+    freeMovieStorage(array);
 }

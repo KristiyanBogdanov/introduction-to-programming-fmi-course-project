@@ -21,7 +21,7 @@ bool isPositive(const int number) {
     return number > 0;
 }
 
-size_t readPositiveNumber(const char* message) {
+size_t readPositiveNumber(const char* message, const size_t max) {
     int number;
     
     while (true) {
@@ -29,7 +29,7 @@ size_t readPositiveNumber(const char* message) {
         cin >> number;
         cin.ignore(); // Clear the newline left in the buffer
 
-        if (isPositive(number)) {
+        if (isPositive(number) && number <= max) { // TODO: fix the warning
             return number;
         } else {
             cout << "Invalid input. Please try again." << endl;
@@ -82,6 +82,16 @@ bool doesStringContainIgnoreCase(const char* string, const char* substring) {
     }
 
     return false;
+}
+
+bool askYesNo(const char* question) {
+    char choice;
+
+    cout << question << " (y/n): ";
+    cin >> choice;
+    cin.ignore(); // Clear the newline left in the buffer
+    
+    return areCharsEqualIgnoreCase(choice, 'y');
 }
 
 bool doesFileExist(const char* filename) {
