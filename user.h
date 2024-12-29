@@ -28,6 +28,7 @@ enum Action {
     SEARCH_BY_TITLE,
     PRINT_ALL,
     EDIT_MOVIE_INFO,
+    DELETE_MOVIE,
     EXIT_PROGRAM,
 };
 

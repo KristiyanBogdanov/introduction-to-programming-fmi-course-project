@@ -17,6 +17,7 @@
 
 #include <fstream>
 #include <cstddef> // Required for size_t
+#include <cstdint> // Required for SIZE_MAX
 
 bool isPositive(const int number);
 size_t readPositiveNumber(const char* message, const size_t max = SIZE_MAX);

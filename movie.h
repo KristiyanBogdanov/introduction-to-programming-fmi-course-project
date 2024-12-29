@@ -16,6 +16,7 @@
 #define MOVIE_H
 
 #include <cstddef> // Required for size_t
+#include <cstdint> // Required for SIZE_MAX
 
 // Movie structure constants
 const size_t MAX_TEXT_LENGTH = 100;
@@ -55,6 +56,7 @@ void freeMovie(Movie* movie);
 MovieStorage createMovieStorage();
 void resizeMovieStorage(MovieStorage& array);
 void addMovieToStorage(MovieStorage& array, Movie* element);
+void removeMovieFromStorage(MovieStorage& array, Movie* element);
 void freeMovieStorage(MovieStorage& array);
 void freeAll(MovieStorage& array);
 

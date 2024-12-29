@@ -45,6 +45,28 @@ void addMovieToStorage(MovieStorage& array, Movie* element) {
     array.data[array.size++] = element;
 }
 
+void removeMovieFromStorage(MovieStorage& array, Movie* element) {
+    size_t index = SIZE_MAX;
+
+    for (size_t i = 0; i < array.size; ++i) {
+        if (array.data[i] == element) {
+            index = i;
+            break;
+        }
+    }
+
+    if (SIZE_MAX == index) {
+        return;
+    }
+
+    for (size_t i = index; i < array.size - 1; ++i) {
+        array.data[i] = array.data[i + 1];
+    }
+
+    --array.size;
+    freeMovie(element);
+}
+
 void freeMovieStorage(MovieStorage& array) {
     delete[] array.data;
 }

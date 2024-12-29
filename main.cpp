@@ -28,6 +28,7 @@ MovieStorage searchByTitle_h(const MovieStorage& movies);
 void searchByTitle(const MovieStorage& movies);
 void printAll(const MovieStorage& movies);
 void editMovieInfo(MovieStorage& movies);
+void deleteMovie(MovieStorage& movies);
 
 int main() {
     printProgramHeader();
@@ -63,6 +64,10 @@ int main() {
         }
         case EDIT_MOVIE_INFO: {
             editMovieInfo(movies);
+            break;
+        }
+        case DELETE_MOVIE: {
+            deleteMovie(movies);
             break;
         }
         default:
@@ -127,6 +132,17 @@ void editMovieInfo(MovieStorage& movies) {
     if (result.size > 0) {
         size_t index = readPositiveNumber("Enter the index of the movie you want to edit: ", result.size);
         askForNewMovieDetails(result.data[index - 1]);
+    }
+
+    freeMovieStorage(result);
+}
+
+void deleteMovie(MovieStorage& movies) {
+    MovieStorage result = searchByTitle_h(movies);
+
+    if (result.size > 0) {
+        size_t index = readPositiveNumber("Enter the index of the movie you want to delete: ", result.size);
+        removeMovieFromStorage(movies, result.data[index - 1]);
     }
 
     freeMovieStorage(result);
