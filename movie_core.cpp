@@ -44,7 +44,7 @@ MovieStorage findMoviesByGenre(const MovieStorage& array, const char* genre) {
     MovieStorage result = createMovieStorage();
 
     for (size_t i = 0; i < array.size; ++i) {
-        if (areStringsEqualIgnoreCase(array.data[i]->genre, genre)) {
+        if (0 == strcmpIgnoreCase(array.data[i]->genre, genre)) {
             addMovieToStorage(result, array.data[i]);
         }
     }
@@ -128,6 +128,34 @@ void askForNewMovieDetails(Movie* movie) {
             readString(movie->actors[i], MAX_TEXT_LENGTH, "Enter actor name: ");
         }
     }
+}
+
+void swapMovies(Movie*& first, Movie*& second) {
+    Movie* temp = first;
+    first = second;
+    second = temp;
+}
+
+bool compareByRatingDesc(const Movie* first, const Movie* second) {
+    return first->rating < second->rating;
+}
+
+bool compareByTitleAsc(const Movie* first, const Movie* second) {
+    return strcmpIgnoreCase(first->title, second->title) > 0;
+}
+
+MovieStorage sortMovies(const MovieStorage& array, bool (*compare)(const Movie*, const Movie*)) {
+    MovieStorage result = copyMovieStorage(array);
+
+    for (size_t i = 0; i < result.size - 1; ++i) {
+        for (size_t j = 0; j < result.size - i - 1; ++j) {
+            if (compare(result.data[j], result.data[j + 1])) {
+                swapMovies(result.data[j], result.data[j + 1]);
+            }
+        }
+    }
+
+    return result;
 }
 
 void freeMovie(Movie* movie) {

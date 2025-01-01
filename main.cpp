@@ -29,6 +29,7 @@ void searchByTitle(const MovieStorage& movies);
 void printAll(const MovieStorage& movies);
 void editMovieInfo(MovieStorage& movies);
 void deleteMovie(MovieStorage& movies);
+void sortMovies(MovieStorage& movies);
 
 int main() {
     printProgramHeader();
@@ -68,6 +69,10 @@ int main() {
         }
         case DELETE_MOVIE: {
             deleteMovie(movies);
+            break;
+        }
+        case SORT_MOVIES: {
+            sortMovies(movies);
             break;
         }
         default:
@@ -145,5 +150,28 @@ void deleteMovie(MovieStorage& movies) {
         removeMovieFromStorage(movies, result.data[index - 1]);
     }
 
+    freeMovieStorage(result);
+}
+
+void sortMovies(MovieStorage& movies) {
+    cout << "Please choose the sorting criteria:" << endl;
+    cout << "[1] By rating (descending)" << endl;
+    cout << "[2] By title (ascending)" << endl;
+
+    int choice = readPositiveNumber("Enter your choice: ", 2);
+    MovieStorage result;
+
+    switch (choice) {
+        case 1:
+            result = sortMovies(movies, compareByRatingDesc);
+            break;
+        case 2:
+            result = sortMovies(movies, compareByTitleAsc);
+            break;
+        default:
+            break;
+    }
+
+    printMovies(result);
     freeMovieStorage(result);
 }

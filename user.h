@@ -29,6 +29,7 @@ enum Action {
     PRINT_ALL,
     EDIT_MOVIE_INFO,
     DELETE_MOVIE,
+    SORT_MOVIES,
     EXIT_PROGRAM,
 };
 

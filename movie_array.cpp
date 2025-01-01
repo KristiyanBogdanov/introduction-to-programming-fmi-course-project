@@ -14,12 +14,12 @@
 
 #include "movie.h"
 
-MovieStorage createMovieStorage() {
+MovieStorage createMovieStorage(size_t initialCapacity) {
     MovieStorage array;
 
-    array.data = new Movie*[INITIAL_CAPACITY];
+    array.data = new Movie*[initialCapacity];
     array.size = 0;
-    array.capacity = INITIAL_CAPACITY;
+    array.capacity = initialCapacity;
 
     return array;
 }
@@ -65,6 +65,16 @@ void removeMovieFromStorage(MovieStorage& array, Movie* element) {
 
     --array.size;
     freeMovie(element);
+}
+
+MovieStorage copyMovieStorage(const MovieStorage& array) {
+    MovieStorage result = createMovieStorage(array.capacity);
+
+    for (size_t i = 0; i < array.size; ++i) {
+        addMovieToStorage(result, array.data[i]);
+    }
+
+    return result;
 }
 
 void freeMovieStorage(MovieStorage& array) {

@@ -50,17 +50,17 @@ bool areCharsEqualIgnoreCase(const char first, const char second) {
     return toLowerCase(first) == toLowerCase(second);
 }
 
-bool areStringsEqualIgnoreCase(const char* first, const char* second) {
+int strcmpIgnoreCase(const char* first, const char* second) {
     while (*first && *second) {
         if (!areCharsEqualIgnoreCase(*first, *second)) {
-            return false;
+            return toLowerCase(*first) - toLowerCase(*second);
         }
 
         ++first;
         ++second;
     }
 
-    return *first == *second;
+    return toLowerCase(*first) - toLowerCase(*second);
 }
 
 bool doesStringContainIgnoreCase(const char* string, const char* substring) {

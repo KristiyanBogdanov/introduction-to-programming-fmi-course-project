@@ -51,12 +51,17 @@ MovieStorage findMoviesByGenre(const MovieStorage& array, const char* genre);
 MovieStorage findMoviesByTitle(const MovieStorage& array, const char* title);
 void printMovies(const MovieStorage& array);
 void askForNewMovieDetails(Movie* movie);
+void swapMovies(Movie*& first, Movie*& second);
+bool compareByRatingDesc(const Movie* first, const Movie* second);
+bool compareByTitleAsc(const Movie* first, const Movie* second);
+MovieStorage sortMovies(const MovieStorage& array, bool (*compare)(const Movie*, const Movie*));
 void freeMovie(Movie* movie);
 
-MovieStorage createMovieStorage();
+MovieStorage createMovieStorage(size_t initialCapacity = INITIAL_CAPACITY);
 void resizeMovieStorage(MovieStorage& array);
 void addMovieToStorage(MovieStorage& array, Movie* element);
 void removeMovieFromStorage(MovieStorage& array, Movie* element);
+MovieStorage copyMovieStorage(const MovieStorage& array);
 void freeMovieStorage(MovieStorage& array);
 void freeAll(MovieStorage& array);
 
