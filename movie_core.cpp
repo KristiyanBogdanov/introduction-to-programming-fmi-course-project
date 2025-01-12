@@ -167,6 +167,18 @@ void addReviewToMovie(Movie* movie, const Review& review) {
     ++movie->reviewsCount;
 }
 
+MovieStorage filterMoviesByRating(const MovieStorage& array, const double rating) {
+    MovieStorage result = createMovieStorage();
+
+    for (size_t i = 0; i < array.size; ++i) {
+        if (array.data[i]->rating >= rating) {
+            addMovieToStorage(result, array.data[i]);
+        }
+    }
+
+    return result;
+}
+
 void freeMovie(Movie* movie) {
     delete[] movie->actors;
     delete movie;

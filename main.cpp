@@ -12,26 +12,11 @@
  * 
 */
 
-#include "user.h"
-#include "movie.h"
+#include "main.h"
 #include "utils.h"
 #include <iostream>
 
 using namespace std;
-
-const char* MOVIES_FILENAME = "movies.txt";
-const char* REVIEWS_FILENAME = "reviews.txt";
-
-void printProgramHeader();
-void addMovie(MovieStorage& movies);
-void searchByGenre(const MovieStorage& movies);
-MovieStorage searchByTitle_h(const MovieStorage& movies);
-void searchByTitle(const MovieStorage& movies);
-void printAll(const MovieStorage& movies);
-void editMovieInfo(MovieStorage& movies);
-void deleteMovie(MovieStorage& movies);
-void sortMovies(MovieStorage& movies);
-void addReview(MovieStorage& movies);
 
 int main() {
     printProgramHeader();
@@ -46,8 +31,31 @@ int main() {
     }
 
     UserType userType = chooseUserType();
-    Action action = selectAction(userType);
 
+    while (true) {
+        Action action = selectAction(userType);
+
+        if (EXIT_PROGRAM == action) {
+            break;
+        }
+
+        executeAction(action, movies);
+    }
+
+    result = saveMoviesToTextFile(movies, MOVIES_FILENAME);
+
+    if (-1 == result) {
+        cout << "Error saving movies to file." << endl;
+        freeAll(movies);
+        return -1;
+    }
+
+    freeAll(movies);
+
+    return 0;
+}
+
+void executeAction(const Action action, MovieStorage& movies) {
     switch (action) {
         case ADD_MOVIE: {
             addMovie(movies);
@@ -81,21 +89,13 @@ int main() {
             addReview(movies);
             break;
         }
+        case FILTER_BY_RATING: {
+            filterByRating(movies);
+            break;
+        }
         default:
             break;
     }
-
-    result = saveMoviesToTextFile(movies, MOVIES_FILENAME);
-
-    if (-1 == result) {
-        cout << "Error saving movies to file." << endl;
-        freeAll(movies);
-        return -1;
-    }
-
-    freeAll(movies);
-
-    return 0;
 }
 
 void printProgramHeader() {
@@ -159,7 +159,7 @@ void deleteMovie(MovieStorage& movies) {
     freeMovieStorage(result);
 }
 
-void sortMovies(MovieStorage& movies) {
+void sortMovies(const MovieStorage& movies) {
     cout << "Please choose the sorting criteria:" << endl;
     cout << "[1] By rating (descending)" << endl;
     cout << "[2] By title (ascending)" << endl;
@@ -197,5 +197,13 @@ void addReview(MovieStorage& movies) {
         addReviewToTextFile(newReview, REVIEWS_FILENAME);
     }
 
+    freeMovieStorage(result);
+}
+
+void filterByRating(const MovieStorage& movies) {
+    size_t rating = readPositiveNumber("Enter the rating: ", MAX_RATING);
+    MovieStorage result = filterMoviesByRating(movies, rating);
+
+    printMovies(result);
     freeMovieStorage(result);
 }

@@ -64,6 +64,7 @@ bool compareByRatingDesc(const Movie* first, const Movie* second);
 bool compareByTitleAsc(const Movie* first, const Movie* second);
 MovieStorage sortMovies(const MovieStorage& array, bool (*compare)(const Movie*, const Movie*));
 void addReviewToMovie(Movie* movie, const Review& review);
+MovieStorage filterMoviesByRating(const MovieStorage& array, const double rating);
 void freeMovie(Movie* movie);
 
 MovieStorage createMovieStorage(size_t initialCapacity = INITIAL_CAPACITY);

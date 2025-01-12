@@ -26,6 +26,7 @@ const char* ACTION_DESCRIPTIONS[] = {
     "Delete a movie",
     "Sort movies",
     "Add a review",
+    "Filter by rating",
     "Exit program",
 };
 
@@ -37,6 +38,7 @@ const Action ADMIN_ACTIONS[] = {
     EDIT_MOVIE_INFO,
     DELETE_MOVIE,
     SORT_MOVIES,
+    FILTER_BY_RATING,
     EXIT_PROGRAM,
 };
 
@@ -46,6 +48,7 @@ const Action USER_ACTIONS[] = {
     PRINT_ALL,
     SORT_MOVIES,
     ADD_REVIEW,
+    FILTER_BY_RATING,
     EXIT_PROGRAM,
 };
 

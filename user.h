@@ -31,6 +31,7 @@ enum Action {
     DELETE_MOVIE,
     SORT_MOVIES,
     ADD_REVIEW,
+    FILTER_BY_RATING,
     EXIT_PROGRAM,
 };
 
