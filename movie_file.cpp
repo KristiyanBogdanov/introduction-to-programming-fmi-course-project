@@ -29,10 +29,12 @@ int saveMoviesToTextFile(const MovieStorage& array, const char* filename) {
     file << array.size << endl;
 
     for (size_t i = 0; i < array.size; ++i) {
-        file << array.data[i]->title << COL_SEPARATOR
+        file << array.data[i]->id << COL_SEPARATOR
+             << array.data[i]->title << COL_SEPARATOR
              << array.data[i]->year << COL_SEPARATOR
              << array.data[i]->genre << COL_SEPARATOR
              << array.data[i]->director << COL_SEPARATOR
+             << array.data[i]->reviewsCount << COL_SEPARATOR
              << array.data[i]->rating << COL_SEPARATOR
              << array.data[i]->actorsCount << COL_SEPARATOR;
 
@@ -71,6 +73,9 @@ int loadMoviesFromTextFile(MovieStorage& array, const char* filename) {
     for (size_t i = 0; i < size; ++i) {
         Movie* movie = new Movie;
 
+        file >> movie->id;
+        file.ignore(); // Clear the newline left in the buffer
+
         file.getline(movie->title, MAX_TEXT_LENGTH, COL_SEPARATOR);
         file >> movie->year;
         file.ignore(); // Clear the newline left in the buffer
@@ -78,6 +83,8 @@ int loadMoviesFromTextFile(MovieStorage& array, const char* filename) {
         file.getline(movie->genre, MAX_TEXT_LENGTH, COL_SEPARATOR);
         file.getline(movie->director, MAX_TEXT_LENGTH, COL_SEPARATOR);
 
+        file >> movie->reviewsCount;
+        file.ignore(); // Clear the newline left in the buffer
         file >> movie->rating;
         file.ignore(); // Clear the newline left in the buffer
 
@@ -94,6 +101,20 @@ int loadMoviesFromTextFile(MovieStorage& array, const char* filename) {
 
         file.ignore();
     }
+
+    file.close();
+
+    return 0;
+}
+
+int addReviewToTextFile(const Review& review, const char* filename) {
+    ofstream file(filename, ios::app);
+
+    if (!file.is_open()) {
+        return -1;
+    }
+
+    file << review.movieId << COL_SEPARATOR << review.rating << endl;
 
     file.close();
 

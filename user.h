@@ -30,6 +30,7 @@ enum Action {
     EDIT_MOVIE_INFO,
     DELETE_MOVIE,
     SORT_MOVIES,
+    ADD_REVIEW,
     EXIT_PROGRAM,
 };
 

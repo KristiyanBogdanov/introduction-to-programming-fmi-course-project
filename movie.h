@@ -21,6 +21,7 @@
 // Movie structure constants
 const size_t MAX_TEXT_LENGTH = 100;
 const double DEFAULT_RATING = 5.0;
+const size_t MAX_RATING = 10;
 
 // MovieStorage structure constants
 const size_t INITIAL_CAPACITY = 10;
@@ -31,12 +32,19 @@ const char COL_SEPARATOR = ';';
 const char SUB_SEPARATOR = ',';
 
 struct Movie {
+    size_t id;
     char title[MAX_TEXT_LENGTH];
     size_t year;
     char genre[MAX_TEXT_LENGTH];
     char director[MAX_TEXT_LENGTH];
     size_t actorsCount;
     char (*actors)[MAX_TEXT_LENGTH];
+    size_t reviewsCount;
+    double rating;
+};
+
+struct Review {
+    size_t movieId;
     double rating;
 };
 
@@ -55,6 +63,7 @@ void swapMovies(Movie*& first, Movie*& second);
 bool compareByRatingDesc(const Movie* first, const Movie* second);
 bool compareByTitleAsc(const Movie* first, const Movie* second);
 MovieStorage sortMovies(const MovieStorage& array, bool (*compare)(const Movie*, const Movie*));
+void addReviewToMovie(Movie* movie, const Review& review);
 void freeMovie(Movie* movie);
 
 MovieStorage createMovieStorage(size_t initialCapacity = INITIAL_CAPACITY);
@@ -67,5 +76,6 @@ void freeAll(MovieStorage& array);
 
 int saveMoviesToTextFile(const MovieStorage& array, const char* filename);
 int loadMoviesFromTextFile(MovieStorage& array, const char* filename);
+int addReviewToTextFile(const Review& review, const char* filename);
 
 #endif

@@ -35,6 +35,7 @@ Movie* askForMovieDetails() {
         readString(movie->actors[i], MAX_TEXT_LENGTH, "Enter actor name: ");
     }
 
+    movie->reviewsCount = 0;
     movie->rating = DEFAULT_RATING;
 
     return movie;
@@ -70,20 +71,22 @@ void printMovies(const MovieStorage& array) {
         return;
     }
 
-    cout << "Index" << COL_SEPARATOR
+    cout << "Id" << COL_SEPARATOR
          << "Title" << COL_SEPARATOR 
          << "Year" << COL_SEPARATOR 
          << "Genre" << COL_SEPARATOR 
          << "Director" << COL_SEPARATOR 
+         << "Number of reviews" << COL_SEPARATOR
          << "Rating" << COL_SEPARATOR 
          << "Actors" << endl;
 
     for (size_t i = 0; i < array.size; ++i) {
-        cout << i + 1 << COL_SEPARATOR
+        cout << array.data[i]->id << COL_SEPARATOR
              << array.data[i]->title << COL_SEPARATOR 
              << array.data[i]->year << COL_SEPARATOR 
              << array.data[i]->genre << COL_SEPARATOR 
-             << array.data[i]->director << COL_SEPARATOR 
+             << array.data[i]->director << COL_SEPARATOR
+             << array.data[i]->reviewsCount << COL_SEPARATOR
              << array.data[i]->rating << COL_SEPARATOR;
 
         for (size_t j = 0; j < array.data[i]->actorsCount; ++j) {
@@ -156,6 +159,12 @@ MovieStorage sortMovies(const MovieStorage& array, bool (*compare)(const Movie*,
     }
 
     return result;
+}
+
+void addReviewToMovie(Movie* movie, const Review& review) {
+    movie->rating = (movie->rating * movie->reviewsCount + review.rating) / (movie->reviewsCount + 1);
+    cout << "The new rating of the movie is: " << movie->rating << endl;
+    ++movie->reviewsCount;
 }
 
 void freeMovie(Movie* movie) {

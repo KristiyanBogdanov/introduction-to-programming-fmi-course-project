@@ -43,6 +43,7 @@ void addMovieToStorage(MovieStorage& array, Movie* element) {
     }
 
     array.data[array.size++] = element;
+    element->id = array.size;
 }
 
 void removeMovieFromStorage(MovieStorage& array, Movie* element) {

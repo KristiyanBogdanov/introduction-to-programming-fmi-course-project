@@ -19,7 +19,8 @@
 
 using namespace std;
 
-const char* DB_FILENAME = "movies.txt";
+const char* MOVIES_FILENAME = "movies.txt";
+const char* REVIEWS_FILENAME = "reviews.txt";
 
 void printProgramHeader();
 void addMovie(MovieStorage& movies);
@@ -30,12 +31,13 @@ void printAll(const MovieStorage& movies);
 void editMovieInfo(MovieStorage& movies);
 void deleteMovie(MovieStorage& movies);
 void sortMovies(MovieStorage& movies);
+void addReview(MovieStorage& movies);
 
 int main() {
     printProgramHeader();
 
     MovieStorage movies = createMovieStorage();
-    int result = loadMoviesFromTextFile(movies, DB_FILENAME);
+    int result = loadMoviesFromTextFile(movies, MOVIES_FILENAME);
 
     if (-1 == result) {
         cout << "Error loading movies from file." << endl;
@@ -75,11 +77,15 @@ int main() {
             sortMovies(movies);
             break;
         }
+        case ADD_REVIEW: {
+            addReview(movies);
+            break;
+        }
         default:
             break;
     }
 
-    result = saveMoviesToTextFile(movies, DB_FILENAME);
+    result = saveMoviesToTextFile(movies, MOVIES_FILENAME);
 
     if (-1 == result) {
         cout << "Error saving movies to file." << endl;
@@ -135,8 +141,8 @@ void editMovieInfo(MovieStorage& movies) {
     MovieStorage result = searchByTitle_h(movies);
 
     if (result.size > 0) {
-        size_t index = readPositiveNumber("Enter the index of the movie you want to edit: ", result.size);
-        askForNewMovieDetails(result.data[index - 1]);
+        size_t id = readPositiveNumber("Enter the id of the movie you want to edit: ", result.size);
+        askForNewMovieDetails(result.data[id - 1]);
     }
 
     freeMovieStorage(result);
@@ -146,8 +152,8 @@ void deleteMovie(MovieStorage& movies) {
     MovieStorage result = searchByTitle_h(movies);
 
     if (result.size > 0) {
-        size_t index = readPositiveNumber("Enter the index of the movie you want to delete: ", result.size);
-        removeMovieFromStorage(movies, result.data[index - 1]);
+        size_t id = readPositiveNumber("Enter the id of the movie you want to delete: ", result.size);
+        removeMovieFromStorage(movies, result.data[id - 1]);
     }
 
     freeMovieStorage(result);
@@ -173,5 +179,23 @@ void sortMovies(MovieStorage& movies) {
     }
 
     printMovies(result);
+    freeMovieStorage(result);
+}
+
+void addReview(MovieStorage& movies) {
+    MovieStorage result = searchByTitle_h(movies);
+
+    if (result.size > 0) {
+        size_t index = readPositiveNumber("Enter the id of the movie you want to review: ", result.size);
+        size_t rating = readPositiveNumber("Enter the rating: ", MAX_RATING);
+
+        Review newReview;
+        newReview.movieId = result.data[index - 1]->id;
+        newReview.rating = rating;
+
+        addReviewToMovie(result.data[index - 1], newReview);
+        addReviewToTextFile(newReview, REVIEWS_FILENAME);
+    }
+
     freeMovieStorage(result);
 }
