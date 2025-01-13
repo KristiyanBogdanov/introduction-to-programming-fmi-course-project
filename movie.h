@@ -19,7 +19,7 @@
 #include <cstdint> // Required for SIZE_MAX
 
 // Movie structure constants
-const size_t MAX_TEXT_LENGTH = 100;
+const size_t MAX_TEXT_LENGTH = 30;
 const double DEFAULT_RATING = 5.0;
 const size_t MAX_RATING = 10;
 

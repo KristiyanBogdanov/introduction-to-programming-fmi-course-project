@@ -31,6 +31,7 @@ int main() {
     }
 
     UserType userType = chooseUserType();
+    clearConsole();
 
     while (true) {
         Action action = selectAction(userType);
@@ -39,7 +40,13 @@ int main() {
             break;
         }
 
+        clearConsole();
         executeAction(action, movies);
+
+        cout << endl;
+        cout << "Press Enter to continue...";
+        cin.get();
+        clearConsole();
     }
 
     result = saveMoviesToTextFile(movies, MOVIES_FILENAME);
@@ -111,6 +118,7 @@ void addMovie(MovieStorage& movies) {
 void searchByGenre(const MovieStorage& movies) {
     char genre[MAX_TEXT_LENGTH];
     readString(genre, MAX_TEXT_LENGTH, "Enter genre: ");
+    cout << endl;
 
     MovieStorage result = findMoviesByGenre(movies, genre);
     printMovies(result);
@@ -121,6 +129,7 @@ void searchByGenre(const MovieStorage& movies) {
 MovieStorage searchByTitle_h(const MovieStorage& movies) {
     char title[MAX_TEXT_LENGTH];
     readString(title, MAX_TEXT_LENGTH, "Enter title: ");
+    cout << endl;
 
     MovieStorage result = findMoviesByTitle(movies, title);
     printMovies(result);
@@ -139,6 +148,7 @@ void printAll(const MovieStorage& movies) {
 
 void editMovieInfo(MovieStorage& movies) {
     MovieStorage result = searchByTitle_h(movies);
+    cout << endl;
 
     if (result.size > 0) {
         size_t id = readPositiveNumber("Enter the id of the movie you want to edit: ", result.size);
@@ -150,6 +160,7 @@ void editMovieInfo(MovieStorage& movies) {
 
 void deleteMovie(MovieStorage& movies) {
     MovieStorage result = searchByTitle_h(movies);
+    cout << endl;
 
     if (result.size > 0) {
         size_t id = readPositiveNumber("Enter the id of the movie you want to delete: ", result.size);
@@ -165,6 +176,8 @@ void sortMovies(const MovieStorage& movies) {
     cout << "[2] By title (ascending)" << endl;
 
     int choice = readPositiveNumber("Enter your choice: ", 2);
+    cout << endl;
+
     MovieStorage result;
 
     switch (choice) {
@@ -184,6 +197,7 @@ void sortMovies(const MovieStorage& movies) {
 
 void addReview(MovieStorage& movies) {
     MovieStorage result = searchByTitle_h(movies);
+    cout << endl;
 
     if (result.size > 0) {
         size_t index = readPositiveNumber("Enter the id of the movie you want to review: ", result.size);

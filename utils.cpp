@@ -37,9 +37,24 @@ size_t readPositiveNumber(const char* message, const size_t max) {
     }
 }
 
+size_t myStrlen(const char* str) {
+    size_t length = 0;
+
+    while (str[length]) {
+        ++length;
+    }
+
+    return length;
+}
+
 void readString(char* buffer, const size_t maxLength, const char* message) {
     cout << message;
-    cin.getline(buffer, maxLength);
+    cin.getline(buffer, maxLength - 1);
+
+    if (cin.fail()) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the buffer
+    }
 }
 
 char toLowerCase(const char c) {
@@ -97,4 +112,12 @@ bool askYesNo(const char* question) {
 bool doesFileExist(const char* filename) {
     ifstream file(filename);
     return file.good();
+}
+
+void clearConsole() {
+    #ifdef _WIN32
+        system("cls"); // Clear console for Windows
+    #elif __linux__ || __APPLE__
+        system("clear"); // Clear console for Linux and macOS
+    #endif
 }

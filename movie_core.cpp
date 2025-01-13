@@ -71,23 +71,40 @@ void printMovies(const MovieStorage& array) {
         return;
     }
 
-    cout << "Id" << COL_SEPARATOR
-         << "Title" << COL_SEPARATOR 
-         << "Year" << COL_SEPARATOR 
-         << "Genre" << COL_SEPARATOR 
-         << "Director" << COL_SEPARATOR 
-         << "Number of reviews" << COL_SEPARATOR
-         << "Rating" << COL_SEPARATOR 
+    const size_t SPACE_WIDTH = 2;
+    const size_t ID_WIDTH = myStrlen("Id") + SPACE_WIDTH;
+    const size_t TITLE_WIDTH = MAX_TEXT_LENGTH + SPACE_WIDTH;
+    const size_t YEAR_WIDTH = myStrlen("Year") + SPACE_WIDTH;
+    const size_t GENRE_WIDTH = MAX_TEXT_LENGTH + SPACE_WIDTH;
+    const size_t DIRECTOR_WIDTH = MAX_TEXT_LENGTH + SPACE_WIDTH;
+    const size_t REVIEWS_WIDTH = myStrlen("Reviews") + SPACE_WIDTH;
+    const size_t RATING_WIDTH = myStrlen("Rating") + SPACE_WIDTH;
+
+    cout << left << setw(ID_WIDTH) << "Id"
+         << left << setw(TITLE_WIDTH) << "Title"
+         << left << setw(YEAR_WIDTH) << "Year"
+         << left << setw(GENRE_WIDTH) << "Genre"
+         << left << setw(DIRECTOR_WIDTH) << "Director"
+         << left << setw(REVIEWS_WIDTH) << "Reviews"
+         << left << setw(RATING_WIDTH) << "Rating"
          << "Actors" << endl;
 
+    size_t widthSum = ID_WIDTH + TITLE_WIDTH + YEAR_WIDTH + GENRE_WIDTH + DIRECTOR_WIDTH + REVIEWS_WIDTH + RATING_WIDTH + myStrlen("Actors");
+
+    for (size_t i = 0; i < widthSum; ++i) {
+        cout << "-";
+    }
+
+    cout << endl;
+
     for (size_t i = 0; i < array.size; ++i) {
-        cout << array.data[i]->id << COL_SEPARATOR
-             << array.data[i]->title << COL_SEPARATOR 
-             << array.data[i]->year << COL_SEPARATOR 
-             << array.data[i]->genre << COL_SEPARATOR 
-             << array.data[i]->director << COL_SEPARATOR
-             << array.data[i]->reviewsCount << COL_SEPARATOR
-             << array.data[i]->rating << COL_SEPARATOR;
+        cout << left << setw(ID_WIDTH) << array.data[i]->id
+             << left << setw(TITLE_WIDTH) << array.data[i]->title
+             << left << setw(YEAR_WIDTH) << array.data[i]->year
+             << left << setw(GENRE_WIDTH) << array.data[i]->genre
+             << left << setw(DIRECTOR_WIDTH) << array.data[i]->director
+             << left << setw(REVIEWS_WIDTH) << array.data[i]->reviewsCount
+             << left << setw(RATING_WIDTH) << array.data[i]->rating;
 
         for (size_t j = 0; j < array.data[i]->actorsCount; ++j) {
             cout << array.data[i]->actors[j];
@@ -163,7 +180,6 @@ MovieStorage sortMovies(const MovieStorage& array, bool (*compare)(const Movie*,
 
 void addReviewToMovie(Movie* movie, const Review& review) {
     movie->rating = (movie->rating * movie->reviewsCount + review.rating) / (movie->reviewsCount + 1);
-    cout << "The new rating of the movie is: " << movie->rating << endl;
     ++movie->reviewsCount;
 }
 
