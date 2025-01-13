@@ -23,6 +23,7 @@ int saveMoviesToTextFile(const MovieStorage& array, const char* filename) {
     ofstream file(filename, ios::out);
 
     if (!file.is_open()) {
+        cout << "Error saving movies to file." << endl;
         return -1;
     }
 
@@ -63,6 +64,7 @@ int loadMoviesFromTextFile(MovieStorage& array, const char* filename) {
     }
 
     if (!file.is_open()) {
+        cout << "Error loading movies from file." << endl;
         return -1;
     }
 

@@ -25,7 +25,6 @@ int main() {
     int result = loadMoviesFromTextFile(movies, MOVIES_FILENAME);
 
     if (-1 == result) {
-        cout << "Error loading movies from file." << endl;
         freeAll(movies);
         return -1;
     }
@@ -47,14 +46,6 @@ int main() {
         cout << "Press Enter to continue...";
         cin.get();
         clearConsole();
-    }
-
-    result = saveMoviesToTextFile(movies, MOVIES_FILENAME);
-
-    if (-1 == result) {
-        cout << "Error saving movies to file." << endl;
-        freeAll(movies);
-        return -1;
     }
 
     freeAll(movies);
@@ -113,6 +104,7 @@ void printProgramHeader() {
 void addMovie(MovieStorage& movies) {
     Movie* newMovie = askForMovieDetails();
     addMovieToStorage(movies, newMovie);
+    saveMoviesToTextFile(movies, MOVIES_FILENAME);
 }
 
 void searchByGenre(const MovieStorage& movies) {
@@ -153,6 +145,7 @@ void editMovieInfo(MovieStorage& movies) {
     if (result.size > 0) {
         size_t id = readPositiveNumber("Enter the id of the movie you want to edit: ", result.size);
         askForNewMovieDetails(result.data[id - 1]);
+        saveMoviesToTextFile(movies, MOVIES_FILENAME);
     }
 
     freeMovieStorage(result);
@@ -165,6 +158,7 @@ void deleteMovie(MovieStorage& movies) {
     if (result.size > 0) {
         size_t id = readPositiveNumber("Enter the id of the movie you want to delete: ", result.size);
         removeMovieFromStorage(movies, result.data[id - 1]);
+        saveMoviesToTextFile(movies, MOVIES_FILENAME);
     }
 
     freeMovieStorage(result);
@@ -209,6 +203,7 @@ void addReview(MovieStorage& movies) {
 
         addReviewToMovie(result.data[index - 1], newReview);
         addReviewToTextFile(newReview, REVIEWS_FILENAME);
+        saveMoviesToTextFile(movies, MOVIES_FILENAME);
     }
 
     freeMovieStorage(result);
