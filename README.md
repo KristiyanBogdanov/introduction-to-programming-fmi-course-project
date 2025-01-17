@@ -8,14 +8,14 @@ This project is a simplified version of the Internet Movie Database (IMDb). It a
 2. Search movies by title or genre.
 3. Sort movies by title or rating.
 4. View all movies and their details.
-5. Add ratings and reviews to movies.
+5. Add ratings to movies.
 6. Filter movies by minimum rating.
 
 ## Roles and Functionalities
 
 ### Admin:
-- **Add New Movie**: Add movie details such as title, year, genre, director, and actors.
-- **Edit Movie Details**: Modify existing movie data (e.g., title, year, genre, director, actors, or rating).
+- **Add New Movie**: Add movie details.
+- **Edit Movie Details**: Modify existing movie data.
 - **Delete Movie**: Remove a movie from the database.
 - **Sort Movies**: Sort movies by title (ascending) or rating (descending).
 - **Search Movies**: Find movies by title or genre.
@@ -44,10 +44,6 @@ This project is a simplified version of the Internet Movie Database (IMDb). It a
    ```bash
    ./movie_manager
    ```
-
-## File Descriptions
-- **movies.txt**: Stores movie data, including uid, title, year, genre, director, actors, rating
-- **reviews.txt**: Stores user-submitted reviews, mapping each review to a movie uid.
 
 ## Author
 - **Kristiyan Bogdanov**

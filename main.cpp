@@ -27,8 +27,8 @@ using namespace std;
 
 // Movie structure constants
 const size_t MAX_TEXT_LENGTH = 30;
-const double DEFAULT_RATING = 5.0;
-const size_t MAX_RATING = 10;
+const double DEFAULT_RATING = 5.0; // The used type is double because the field is used for storing the average rating of the movie
+const size_t MAX_RATING = 10; // The used type is size_t because the rating system follows the logic of the real IMDb where the rating is between 1 and 10 (whole numbers)
 
 // MovieStorage structure constants
 const size_t INITIAL_CAPACITY = 10;
@@ -81,6 +81,7 @@ struct Review {
     double rating;
 };
 
+// Dynamic array of pointers to Movie structures.
 struct MovieStorage {
     Movie** data;
     size_t size;
@@ -130,6 +131,8 @@ const Action USER_ACTIONS[] = {
 // Global variables:
 // =================
 
+// This counter is used to generate unique IDs for the movies. It is incremented each time a new movie is added.
+// It follows the logic of the auto-incremented primary key in a database.
 size_t MOVIES_ID_COUNTER = 0;
 
 // ======================
@@ -186,16 +189,15 @@ int addReviewToTextFile(const Review& review, const char* filename);
 
 // Utility functions:
 bool isPositive(const int number);
-size_t readPositiveNumber(const char* message, const size_t max = SIZE_MAX);
+size_t readPositiveNumber(const char* message, const size_t max = SIZE_MAX); // SIZE_MAX is the maximum value of size_t
 size_t myStrlen(const char* str);
-bool doesStringContainsDelimiter(const char* string);
+bool doesStringContainsDelimiter(const char* string); // Checks if the string contains one of the delimiters defined in the constants section
 void readString(char* buffer, const size_t maxLength, const char* message);
 char toLowerCase(const char c);
 bool areCharsEqualIgnoreCase(const char first, const char second);
 int strcmpIgnoreCase(const char* first, const char* second);
 bool doesStringContainIgnoreCase(const char* string, const char* substring);
 bool askYesNo(const char* question);
-bool doesFileExist(const char* filename);
 void clearConsole();
 
 // ==============
@@ -336,8 +338,8 @@ int editMovieInfo(MovieStorage& movies) {
     cout << endl;
 
     if (result.size > 0) {
-        size_t id = readPositiveNumber("Enter the No. of the movie you want to edit: ", result.size);
-        askForNewMovieDetails(result.data[id - 1]);
+        size_t idx = readPositiveNumber("Enter the No. of the movie you want to edit: ", result.size);
+        askForNewMovieDetails(result.data[idx - 1]);
         success = saveMoviesToTextFile(movies, MOVIES_FILENAME);
     }
 
@@ -353,8 +355,8 @@ int deleteMovie(MovieStorage& movies) {
     cout << endl;
 
     if (result.size > 0) {
-        size_t id = readPositiveNumber("Enter the No. of the movie you want to delete: ", result.size);
-        removeMovieFromStorage(movies, result.data[id - 1]);
+        size_t idx = readPositiveNumber("Enter the No. of the movie you want to delete: ", result.size);
+        removeMovieFromStorage(movies, result.data[idx - 1]);
         success = saveMoviesToTextFile(movies, MOVIES_FILENAME);
     }
 
@@ -401,14 +403,14 @@ int addReview(MovieStorage& movies) {
     cout << endl;
 
     if (result.size > 0) {
-        size_t index = readPositiveNumber("Enter the No. of the movie you want to review: ", result.size);
+        size_t idx = readPositiveNumber("Enter the No. of the movie you want to review: ", result.size);
         size_t rating = readPositiveNumber("Enter the rating: ", MAX_RATING);
 
         Review newReview;
-        newReview.movieId = result.data[index - 1]->id;
+        newReview.movieId = result.data[idx - 1]->id;
         newReview.rating = rating;
 
-        addReviewToMovie(result.data[index - 1], newReview);
+        addReviewToMovie(result.data[idx - 1], newReview);
         addReviewSuccess = addReviewToTextFile(newReview, REVIEWS_FILENAME);
         saveMoviesSuccess = saveMoviesToTextFile(movies, MOVIES_FILENAME);
     }
@@ -494,6 +496,8 @@ Action selectAction(const UserType userType) {
 
 Movie* askForMovieDetails() {
     Movie* movie = new Movie;
+    
+    movie->id = ++MOVIES_ID_COUNTER;
 
     readString(movie->title, MAX_TEXT_LENGTH, "Enter movie title: ");
 
@@ -511,8 +515,6 @@ Movie* askForMovieDetails() {
 
     movie->reviewsCount = 0;
     movie->rating = DEFAULT_RATING;
-
-    movie->id = ++MOVIES_ID_COUNTER;
 
     return movie;
 }
@@ -601,6 +603,10 @@ void printMovies(const MovieStorage& array) {
 }
 
 void askForNewMovieDetails(Movie* movie) {
+    if (nullptr == movie) {
+        return;
+    }
+
     if (askYesNo("Do you want to edit the movie title?")) {
         readString(movie->title, MAX_TEXT_LENGTH, "Enter new movie title: ");
     }
@@ -639,10 +645,18 @@ void swapMovies(Movie*& first, Movie*& second) {
 }
 
 bool compareByRatingDesc(const Movie* first, const Movie* second) {
+    if (nullptr == first || nullptr == second) {
+        return false;
+    }
+
     return first->rating < second->rating;
 }
 
 bool compareByTitleAsc(const Movie* first, const Movie* second) {
+    if (nullptr == first || nullptr == second) {
+        return false;
+    }
+
     return strcmpIgnoreCase(first->title, second->title) > 0;
 }
 
@@ -662,6 +676,10 @@ MovieStorage sortMovies(const MovieStorage& array, bool (*compare)(const Movie*,
 }
 
 void addReviewToMovie(Movie* movie, const Review& review) {
+    if (nullptr == movie) {
+        return;
+    }
+
     movie->rating = (movie->rating * movie->reviewsCount + review.rating) / (movie->reviewsCount + 1);
     ++movie->reviewsCount;
 }
@@ -679,6 +697,10 @@ MovieStorage filterMoviesByRating(const MovieStorage& array, const double rating
 }
 
 void freeMovie(Movie* movie) {
+    if (nullptr == movie) {
+        return;
+    }
+
     delete[] movie->actors;
     delete movie;
 }
@@ -709,6 +731,10 @@ void resizeMovieStorage(MovieStorage& array) {
 }
 
 void addMovieToStorage(MovieStorage& array, Movie* element) {
+    if (nullptr == element) {
+        return;
+    }
+
     if (array.size == array.capacity) {
         resizeMovieStorage(array);
     }
@@ -717,6 +743,10 @@ void addMovieToStorage(MovieStorage& array, Movie* element) {
 }
 
 void removeMovieFromStorage(MovieStorage& array, Movie* element) {
+    if (nullptr == element) {
+        return;
+    }
+
     size_t index = SIZE_MAX;
 
     for (size_t i = 0; i < array.size; ++i) {
@@ -796,20 +826,20 @@ int saveMoviesToTextFile(const MovieStorage& array, const char* filename) {
 }
 
 int loadMoviesFromTextFile(MovieStorage& array, const char* filename) {
+    if (!ifstream(filename)) { // Check if the file exists
+        return 0;
+    }
+
     ifstream file(filename, ios::in);
 
-    if (!doesFileExist(filename)) {
-        return 0;
-    }
-
-    if (file.peek() == ifstream::traits_type::eof()) {
-        file.close();
-        return 0;
-    }
-
-    if (!file.is_open()) {
+    if (!file.is_open()) { // Check if the file is opened successfully
         cout << "Error loading movies from file." << endl;
         return -1;
+    }
+
+    if (file.peek() == ifstream::traits_type::eof()) { // Check if the file is empty
+        file.close();
+        return 0;
     }
 
     size_t size;
@@ -882,7 +912,7 @@ size_t readPositiveNumber(const char* message, const size_t max) {
         cin >> number;
         cin.ignore(); // Clear the newline left in the buffer
 
-        if (isPositive(number) && number <= (int) max) {
+        if (isPositive(number) && (size_t) number <= max) {
             return number;
         } else {
             cout << "Invalid input. Please try again." << endl;
@@ -891,6 +921,10 @@ size_t readPositiveNumber(const char* message, const size_t max) {
 }
 
 size_t myStrlen(const char* str) {
+    if (nullptr == str) {
+        return 0;
+    }
+
     size_t length = 0;
 
     while (str[length]) {
@@ -901,6 +935,10 @@ size_t myStrlen(const char* str) {
 }
 
 bool doesStringContainsDelimiter(const char* string) {
+    if (nullptr == string) {
+        return false;
+    }
+
     while (*string) {
         if (*string == COL_SEPARATOR || *string == SUB_SEPARATOR) {
             return true;
@@ -937,6 +975,18 @@ bool areCharsEqualIgnoreCase(const char first, const char second) {
 }
 
 int strcmpIgnoreCase(const char* first, const char* second) {
+    if (nullptr == first && nullptr == second) {
+        return 0; // Both strings are null, so they are considered equal
+    }
+
+    if (nullptr == first) {
+        return -1; // Null is considered less than any non-null string
+    }
+
+    if (nullptr == second) {
+        return 1; // Any non-null string is considered greater than null
+    }
+    
     while (*first && *second) {
         if (!areCharsEqualIgnoreCase(*first, *second)) {
             return toLowerCase(*first) - toLowerCase(*second);
@@ -950,6 +1000,10 @@ int strcmpIgnoreCase(const char* first, const char* second) {
 }
 
 bool doesStringContainIgnoreCase(const char* string, const char* substring) {
+    if (nullptr == string || nullptr == substring) {
+        return false;
+    }
+
     while (*string) {
         const char* stringStart = string;
         const char* substringStart = substring;
@@ -978,11 +1032,6 @@ bool askYesNo(const char* question) {
     cin.ignore(); // Clear the newline left in the buffer
     
     return areCharsEqualIgnoreCase(choice, 'y');
-}
-
-bool doesFileExist(const char* filename) {
-    ifstream file(filename);
-    return file.good();
 }
 
 // Clear the console based on the operating system.
