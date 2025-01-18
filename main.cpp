@@ -18,6 +18,18 @@
 
 #include <iostream>
 #include <fstream>
+#include <cmath> // Include <cmath> library to use the log10() function.
+
+// Include <iomanip> library to use the std::fixed and std::setprecision() functions.
+// The std::fixed function is used to display the floating-point numbers in fixed-point notation.
+// The std::setprecision() function is used to set the number of decimal places to display for the floating-point numbers.
+// If I don't use them my custom padding functions (alternative to std::setw()) will not work perfectly.
+#include <iomanip>
+
+// Include the <limits> library to use the numeric_limits<streamsize>::max() constant.
+// This constant is used to clear the buffer in the readString() function when the user enters string with more characters than the buffer can hold.
+// If I don't clear the buffer, the program will enter an infinite loop because the cin.fail() condition will always be true.
+#include <limits>
 
 using namespace std;
 
@@ -198,6 +210,10 @@ bool areCharsEqualIgnoreCase(const char first, const char second);
 int strcmpIgnoreCase(const char* first, const char* second);
 bool doesStringContainIgnoreCase(const char* string, const char* substring);
 bool askYesNo(const char* question);
+size_t countDigits(size_t number);
+void padText(const char* text, const size_t width);
+void padPositiveInt(const int number, const size_t width);
+void padDouble(const double number, const size_t width, const size_t precision);
 void clearConsole();
 
 // ==============
@@ -549,9 +565,11 @@ void printMovies(const MovieStorage& array) {
         return;
     }
 
+    // Column widths
     const size_t SPACE_WIDTH = 2;
-    const size_t ROW_NUMBER_WIDTH = myStrlen("No.") + SPACE_WIDTH;
-    const size_t ID_WIDTH = myStrlen("UID") + SPACE_WIDTH;
+    const size_t NUM_PERCISION = 1;
+    const size_t ROW_NUMBER_WIDTH = countDigits(array.size) + myStrlen("No.") + SPACE_WIDTH;
+    const size_t ID_WIDTH = countDigits(MOVIES_ID_COUNTER) + myStrlen("UID") + SPACE_WIDTH;
     const size_t TITLE_WIDTH = MAX_TEXT_LENGTH + SPACE_WIDTH;
     const size_t YEAR_WIDTH = myStrlen("Year") + SPACE_WIDTH;
     const size_t GENRE_WIDTH = MAX_TEXT_LENGTH + SPACE_WIDTH;
@@ -559,37 +577,39 @@ void printMovies(const MovieStorage& array) {
     const size_t REVIEWS_WIDTH = myStrlen("Reviews") + SPACE_WIDTH;
     const size_t RATING_WIDTH = myStrlen("Rating") + SPACE_WIDTH;
 
-    // Using setw() to set the width of the columns in order to align the output correctly and make it more readable.
-    // setw() is used in combination with left to align the text to the left side of the column.
-    // This way of formatting the output is used in the one of the presentations from the course.
-    cout << left << setw(ROW_NUMBER_WIDTH) << "No."
-         << left << setw(ID_WIDTH) << "UID"
-         << left << setw(TITLE_WIDTH) << "Title"
-         << left << setw(YEAR_WIDTH) << "Year"
-         << left << setw(GENRE_WIDTH) << "Genre"
-         << left << setw(DIRECTOR_WIDTH) << "Director"
-         << left << setw(REVIEWS_WIDTH) << "Reviews"
-         << left << setw(RATING_WIDTH) << "Rating"
-         << "Actors" << endl;
+    const size_t WIDTH_SUM = ROW_NUMBER_WIDTH + ID_WIDTH + TITLE_WIDTH + YEAR_WIDTH +
+                         GENRE_WIDTH + DIRECTOR_WIDTH + REVIEWS_WIDTH + RATING_WIDTH +
+                         myStrlen("Actors");
 
-    size_t widthSum = ROW_NUMBER_WIDTH + ID_WIDTH + TITLE_WIDTH + YEAR_WIDTH + GENRE_WIDTH + DIRECTOR_WIDTH + REVIEWS_WIDTH + RATING_WIDTH + myStrlen("Actors");
+    // Print the header
+    padText("No.", ROW_NUMBER_WIDTH);
+    padText("UID", ID_WIDTH);
+    padText("Title", TITLE_WIDTH);
+    padText("Year", YEAR_WIDTH);
+    padText("Genre", GENRE_WIDTH);
+    padText("Director", DIRECTOR_WIDTH);
+    padText("Reviews", REVIEWS_WIDTH);
+    padText("Rating", RATING_WIDTH);
+    cout << "Actors" << endl;
 
-    for (size_t i = 0; i < widthSum; ++i) {
-        cout << "-";
+    // Print the separator
+    for (size_t i = 0; i < WIDTH_SUM; ++i) {
+        cout << '-';
     }
 
     cout << endl;
 
+    // Print the movies
     for (size_t i = 0; i < array.size; ++i) {
-        cout << left << setw(ROW_NUMBER_WIDTH) << i + 1
-             << left << setw(ID_WIDTH) << array.data[i]->id
-             << left << setw(TITLE_WIDTH) << array.data[i]->title
-             << left << setw(YEAR_WIDTH) << array.data[i]->year
-             << left << setw(GENRE_WIDTH) << array.data[i]->genre
-             << left << setw(DIRECTOR_WIDTH) << array.data[i]->director
-             << left << setw(REVIEWS_WIDTH) << array.data[i]->reviewsCount
-             << left << setw(RATING_WIDTH) << array.data[i]->rating;
-
+        padPositiveInt(i + 1, ROW_NUMBER_WIDTH);
+        padPositiveInt(array.data[i]->id, ID_WIDTH);
+        padText(array.data[i]->title, TITLE_WIDTH);
+        padPositiveInt(array.data[i]->year, YEAR_WIDTH);
+        padText(array.data[i]->genre, GENRE_WIDTH);
+        padText(array.data[i]->director, DIRECTOR_WIDTH);
+        padPositiveInt(array.data[i]->reviewsCount, REVIEWS_WIDTH);
+        padDouble(array.data[i]->rating, RATING_WIDTH, NUM_PERCISION);
+        
         for (size_t j = 0; j < array.data[i]->actorsCount; ++j) {
             cout << array.data[i]->actors[j];
 
@@ -960,6 +980,8 @@ void readString(char* buffer, const size_t maxLength, const char* message) {
         } else if (cin.fail()) {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the buffer
+            cout << "Entered string was cut off to fit the buffer maximum length." << endl;
+            break;
         } else {
             break;
         }
@@ -1032,6 +1054,40 @@ bool askYesNo(const char* question) {
     cin.ignore(); // Clear the newline left in the buffer
     
     return areCharsEqualIgnoreCase(choice, 'y');
+}
+
+size_t countDigits(size_t number) {
+    return number == 0 ? 1 : (size_t) log10(number) + 1;
+}
+
+void padText(const char* text, const size_t width) {
+    cout << text;
+
+    size_t length = myStrlen(text);
+    
+    for (size_t i = length; i < width; ++i) {
+        cout << ' ';
+    }
+}
+
+void padPositiveInt(const int number, const size_t width) {
+    cout << number;
+
+    size_t digits = countDigits(number);
+
+    for (size_t i = digits; i < width; ++i) {
+        cout << ' ';
+    }
+}
+
+void padDouble(const double number, const size_t width, const size_t precision) {
+    cout << fixed << setprecision(precision) << number;
+
+    size_t digits = countDigits((size_t) number);
+
+    for (size_t i = digits + precision + 1; i < width; ++i) {
+        cout << ' ';
+    }
 }
 
 // Clear the console based on the operating system.
